@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long LL;
-LL A, B, C, k;
+const int N = 15, MOD = 9901;
+LL n, a[N], b[N], A[N], Tot = 1;
 
 int ReadInt() {
     int r = 0, f = 1;
@@ -41,6 +42,23 @@ LL ReadLL() {
     return r * f;
 }
 
+LL ksm(LL a, LL b) {
+    LL ret = 1;
+    while (b) {
+        if (b & 1) ret = ret * a % MOD;
+        a = a * a % MOD;
+        b >>= 1;
+    }
+    return ret;
+}
+
+void Read() {
+    n = ReadLL();
+    for (int i = 1; i <= n; ++i) {
+        a[i] = ReadLL(), b[i] = ReadLL();
+    }
+}
+
 void Exgcd(LL a, LL b, LL &d, LL &x, LL &y) {
     if (!b) {
         x = 1, y = 0, d = a;
@@ -52,21 +70,27 @@ void Exgcd(LL a, LL b, LL &d, LL &x, LL &y) {
     x = y, y = t - a / b * y;
 }
 
-int main() {
-    LL a, m, c, d, x, y;
-    while (cin >> A >> B >> C >> k && (A || B || C || k)) {
-        a = C;
-        m = 1LL << k;
-        c = B - A;
-        Exgcd(a, m, d, x, y);
-        if (c % d == 0) {
-            x = x * c / d;
-            x = ((x % (m / d)) + (m / d)) % (m / d);
-            printf("%lld\n", x);
-        } else {
-            printf("FOREVER\n");
-        }
+void Work() {
+    for (int i = 1; i <= n; ++i) {
+        Tot = Tot * a[i];
     }
+    for (int i = 1; i <= n; ++i) {
+        A[i] = Tot / a[i];
+    }
+    
+    LL d, x, y;
+    LL ans = 0;
+    for (int i = 1; i <= n; ++i) {
+        Exgcd(A[i], a[i], d, x, y);
+        ans = (ans + A[i] * x * b[i] % Tot + Tot) % Tot;
+    }
+    printf("%lld\n", ans);
+}
+
+int main() {
+    Read();
+    
+    Work();
     
     return 0;
 }

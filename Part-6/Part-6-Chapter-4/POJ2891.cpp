@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long LL;
-LL A, B, C, k;
+const int N = 1e5 + 10, MOD = 9901;
+LL n, a, m, Lcm, now, fail;
 
 int ReadInt() {
     int r = 0, f = 1;
@@ -52,21 +53,34 @@ void Exgcd(LL a, LL b, LL &d, LL &x, LL &y) {
     x = y, y = t - a / b * y;
 }
 
-int main() {
-    LL a, m, c, d, x, y;
-    while (cin >> A >> B >> C >> k && (A || B || C || k)) {
-        a = C;
-        m = 1LL << k;
-        c = B - A;
-        Exgcd(a, m, d, x, y);
-        if (c % d == 0) {
-            x = x * c / d;
-            x = ((x % (m / d)) + (m / d)) % (m / d);
-            printf("%lld\n", x);
-        } else {
-            printf("FOREVER\n");
-        }
+void Work() {
+    scanf("%lld%lld", &m, &a);
+    Lcm = m, now = a, fail = 0;
+    LL d, x, y, k;
+    for (int i = 2; i <= n; ++i) {
+        scanf("%lld%lld", &m, &a);
+        a = (a - now % m + m) % m;
+        Exgcd(Lcm, m, d, x, y);
+        if (a % d == 0) {
+            k = x * (a / d) % m;
+        } else fail = 1;
+        
+        now += k * Lcm;
+        Lcm = Lcm / d * m;
+        now = (now % Lcm + Lcm) % Lcm;
     }
+    
+    if (fail) {
+        printf("-1\n");
+    } else printf("%lld\n", now);
+}
+
+int main() {
+    while (scanf("%lld", &n) == 1) {
+        Work();
+    }
+    
+    
     
     return 0;
 }

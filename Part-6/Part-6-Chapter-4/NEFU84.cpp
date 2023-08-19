@@ -1,7 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long LL;
-LL A, B, C, k;
+int T;
+LL m, X, Y, D;
 
 int ReadInt() {
     int r = 0, f = 1;
@@ -52,20 +53,25 @@ void Exgcd(LL a, LL b, LL &d, LL &x, LL &y) {
     x = y, y = t - a / b * y;
 }
 
+void Calc() {
+    cin >> m >> D >> X >> Y;
+    LL a = D, b = Y - X, d, x, y;
+    Exgcd(a, m, d, x, y);
+    if (b % d != 0) {
+        cout << "Impossible" << endl;
+        return;
+    } 
+    
+    x = x * b / d;
+    x = (x % (m / d) + (m / d)) % (m / d);
+    cout << x << endl;
+    
+}
+
 int main() {
-    LL a, m, c, d, x, y;
-    while (cin >> A >> B >> C >> k && (A || B || C || k)) {
-        a = C;
-        m = 1LL << k;
-        c = B - A;
-        Exgcd(a, m, d, x, y);
-        if (c % d == 0) {
-            x = x * c / d;
-            x = ((x % (m / d)) + (m / d)) % (m / d);
-            printf("%lld\n", x);
-        } else {
-            printf("FOREVER\n");
-        }
+    cin >> T;
+    while (T--) {
+        Calc();
     }
     
     return 0;

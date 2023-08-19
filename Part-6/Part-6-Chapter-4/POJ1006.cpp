@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long LL;
-LL A, B, C, k;
+LL a[5], m[5], D, T;
 
 int ReadInt() {
     int r = 0, f = 1;
@@ -52,20 +52,24 @@ void Exgcd(LL a, LL b, LL &d, LL &x, LL &y) {
     x = y, y = t - a / b * y;
 }
 
+void Calc() {
+    LL d, x, y;
+    LL M = m[1] * m[2] * m[3];
+    LL ans = 0;
+    for (int i = 1; i <= 3; ++i) {
+        LL Mi = M / m[i];
+        Exgcd(Mi, m[i], d, x, y);
+        ans = ((ans + x * Mi * a[i]) % M) + M % M;
+        while (ans <= D) ans += M;
+    }
+    printf("Case %lld: the next triple peak occurs in %lld days.\n", T, ans - D);
+}
+
 int main() {
-    LL a, m, c, d, x, y;
-    while (cin >> A >> B >> C >> k && (A || B || C || k)) {
-        a = C;
-        m = 1LL << k;
-        c = B - A;
-        Exgcd(a, m, d, x, y);
-        if (c % d == 0) {
-            x = x * c / d;
-            x = ((x % (m / d)) + (m / d)) % (m / d);
-            printf("%lld\n", x);
-        } else {
-            printf("FOREVER\n");
-        }
+    m[1] = 23, m[2] = 28, m[3] = 33;
+    while (scanf("%lld%lld%lld%lld", &a[1], &a[2], &a[3], &D) == 4 && a[1] != -1) {
+        T++;
+        Calc();
     }
     
     return 0;
